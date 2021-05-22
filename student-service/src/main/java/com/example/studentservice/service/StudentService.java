@@ -13,6 +13,9 @@ public interface StudentService {
 
     StudentDTO deleteUserById(int id);
 
+    StudentDTO findStudentById(int id);
+
     List<StudentDTO> getAllStudent();
+
 
 }

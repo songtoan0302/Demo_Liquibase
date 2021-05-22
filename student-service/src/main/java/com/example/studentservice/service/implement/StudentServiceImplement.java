@@ -1,15 +1,19 @@
 package com.example.studentservice.service.implement;
 
 import com.example.studentservice.dto.StudentDTO;
+import com.example.studentservice.exception.StudentNotFoundException;
 import com.example.studentservice.mapper.StudentMapper;
 import com.example.studentservice.model.Student;
 import com.example.studentservice.repository.StudentRepository;
 import com.example.studentservice.service.StudentService;
+import liquibase.pro.packaged.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class StudentServiceImplement implements StudentService {
     private  final  StudentRepository studentRepository ;
@@ -34,7 +38,7 @@ public class StudentServiceImplement implements StudentService {
     public StudentDTO updateStudent(StudentDTO studentDTO) {
         Student updateStudent = studentRepository.findById(studentDTO.getId())
                 .map(student -> StudentMapper.convertToEntity(studentDTO))
-                .map(studentRepository::saveAndFlush).orElseThrow();
+                .map(studentRepository::saveAndFlush).orElseThrow(StudentNotFoundException::new);
         return StudentMapper.convertToDto(updateStudent);
     }
 
@@ -52,5 +56,11 @@ public class StudentServiceImplement implements StudentService {
         }
 
         return studentDTOS;
+    }
+    @Override
+    public StudentDTO findStudentById(int id){
+        Student students=studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+        return StudentMapper.convertToDto(students);
+
     }
 }
